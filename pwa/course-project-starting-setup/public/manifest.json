@@ -1,0 +1,18 @@
+{
+    "name": "Progressive Web App Gram",
+    "short_name": "PWAGram",
+    "start_url": "/index.html",
+    "scope": ".",
+    "display": "standalone",
+    "background_color": "#ff0000",
+    "theme_color": "#ff00ff",
+    "description": "PWA App with ability to work in offline mode",
+    "dir": "ltr",
+    "lang": "en-US",
+    "orientation": "portrait",
+    "icons": [
+        { "src": "/images/icons/app-icon-48x48.png", "type": "image/png", "sizes": "48x48" },
+        { "src": "/images/icons/app-icon-96x96.png", "type": "image/png", "sizes": "96x96" }
+    ],
+    "related_applications": []
+}
