@@ -20,3 +20,17 @@ button.addEventListener('click', function(event) {
 // 8) Add dynamic caching (with versioning) to cache everything in your app when visited/ fetched by the user
 
 // Important: Clear your Application Storage first to get rid of the old SW & Cache from the Main Course Project!
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(() => {
+    console.log('Service worker registered!');
+  })
+}
+
+window.addEventListener('beforeinstallprompt', (event) => {
+  console.log('before install prompt')
+  event.preventDefault()
+  window.deferredPrompt = event;
+
+  return false;
+})

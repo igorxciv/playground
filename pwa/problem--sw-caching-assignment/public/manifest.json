@@ -1,0 +1,16 @@
+{
+    "name": "PWA Toggle Box app",
+    "short_name": "Toggler",
+    "description": "Toggle box application with PWA tools",
+    "start_url": "/index.html",
+    "scope": ".",
+    "lang": "en-US",
+    "display": "standalone",
+    "icons": [
+        { "src": "/src/images/icons/app-icon-48x48.png", "type": "image/png", "sizes": "48x48" },
+        { "src": "/src/images/icons/app-icon-96x96.png", "type": "image/png", "sizes": "96x96" },
+        { "src": "/src/images/icons/app-icon-144x144.png", "type": "image/png", "sizes": "144x144" }
+    ],
+    "theme_color": "#FF0000",
+    "background_color": "#FF00FF"
+}
