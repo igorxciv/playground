@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 
 	"github.com/igorxciv/playground/grpc/greet/greetpb"
@@ -23,6 +24,8 @@ func main() {
 	c := greetpb.NewGreetServiceClient(conn)
 
 	doUnary(c)
+
+	doStream(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
@@ -40,4 +43,31 @@ func doUnary(c greetpb.GreetServiceClient) {
 	}
 
 	log.Printf("Response from greet: %v", res.Result)
+}
+
+func doStream(c greetpb.GreetServiceClient) {
+	fmt.Println("Starting to do stream RPC")
+
+	req := &greetpb.GreetManyTimesRequest{
+		Greeting: &greetpb.Greeting{
+			FirstName: "Igor",
+			LastName:  "Cheliadinski",
+		},
+	}
+
+	stream, err := c.GreetManyTimes(context.Background(), req)
+	if err != nil {
+		log.Fatalf("failed to get response: %v", err)
+	}
+
+	for {
+		msg, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("failed to get data from response: %v", err)
+		}
+		log.Printf("response from stream: %v", msg.GetResult())
+	}
 }
