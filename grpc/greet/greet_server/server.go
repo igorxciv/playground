@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -11,6 +12,16 @@ import (
 
 type server struct{}
 
+func (s *server) Greet(ctx context.Context, req *greetpb.GreetRequest) (*greetpb.GreetResponse, error) {
+	fmt.Printf("greet function was invoked with %v", req)
+	fName := req.GetGreeting().GetFirstName()
+	result := "Hello " + fName
+	res := &greetpb.GreetResponse{
+		Result: result,
+	}
+	return res, nil
+}
+
 func main() {
 	fmt.Println("Hello world")
 
@@ -20,7 +31,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	greetpb.RegisterDummyServiceServer(s, &server{})
+	greetpb.RegisterGreetServiceServer(s, &server{})
 
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
