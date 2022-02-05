@@ -35,24 +35,55 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
-        if (response) {
-          return response;
-        } else {
-          return fetch(event.request)
-            .then(function(res) {
-              return caches.open(CACHE_DYNAMIC_NAME)
-                .then(function(cache) {
-                  cache.put(event.request.url, res.clone());
-                  return res;
-                });
-            })
-            .catch(function(err) {
+  // Network only
+  // event.respondWith(fetch(event.request));
 
-            });
-        }
-      })
+  // Cache only
+  // event.respondWith(caches.match(event.request).then(response => response));
+
+  // Network, cache fallback
+  // event.respondWith(
+  //   fetch(event.request).then(response => {
+  //     return caches.open(CACHE_DYNAMIC_NAME).then(cache => {
+  //       cache.put(event.request.url, response.clone());
+  //       return response;
+  //     })
+  //   }).catch(() => caches.match(event.request))
+  // );
+
+  // Cache, then network
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      if (response) {
+        return response;
+      }
+      return fetch(event.request).then(res => {
+        caches.open(CACHE_DYNAMIC_NAME).then(cache => {
+          cache.put(event.request.url, res.clone());
+          return res;
+        })
+      });
+    })
   );
+
+  // event.respondWith(
+  //   caches.match(event.request)
+  //     .then(function(response) {
+  //       if (response) {
+  //         return response;
+  //       } else {
+  //         return fetch(event.request)
+  //           .then(function(res) {
+  //             return caches.open(CACHE_DYNAMIC_NAME)
+  //               .then(function(cache) {
+  //                 cache.put(event.request.url, res.clone());
+  //                 return res;
+  //               });
+  //           })
+  //           .catch(function(err) {
+
+  //           });
+  //       }
+  //     })
+  // );
 });

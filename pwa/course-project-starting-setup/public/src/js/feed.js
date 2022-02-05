@@ -30,32 +30,53 @@ shareImageButton.addEventListener('click', openCreatePostModal);
 
 closeCreatePostModalButton.addEventListener('click', closeCreatePostModal);
 
-function createCard() {
+function createCard(data) {
   var cardWrapper = document.createElement('div');
   cardWrapper.className = 'shared-moment-card mdl-card mdl-shadow--2dp';
   var cardTitle = document.createElement('div');
   cardTitle.className = 'mdl-card__title';
-  cardTitle.style.backgroundImage = 'url("/src/images/sf-boat.jpg")';
+  cardTitle.style.backgroundImage = 'url(' + data.image + ')';
   cardTitle.style.backgroundSize = 'cover';
   cardTitle.style.height = '180px';
   cardWrapper.appendChild(cardTitle);
   var cardTitleTextElement = document.createElement('h2');
   cardTitleTextElement.className = 'mdl-card__title-text';
-  cardTitleTextElement.textContent = 'San Francisco Trip';
+  cardTitleTextElement.textContent = data.title;
   cardTitle.appendChild(cardTitleTextElement);
   var cardSupportingText = document.createElement('div');
   cardSupportingText.className = 'mdl-card__supporting-text';
-  cardSupportingText.textContent = 'In San Francisco';
+  cardSupportingText.textContent = data.location;
   cardSupportingText.style.textAlign = 'center';
   cardWrapper.appendChild(cardSupportingText);
   componentHandler.upgradeElement(cardWrapper);
   sharedMomentsArea.appendChild(cardWrapper);
 }
 
-fetch('https://httpbin.org/get')
+function updateUI(data) {
+  for (var i = 0; i < data.length; i++) {
+    createCard(data[i]);
+  }
+}
+
+var url = 'https://pwagram-ff041-default-rtdb.firebaseio.com/posts.json'
+var networkDataRecieved = false;
+
+fetch(url)
   .then(function(res) {
     return res.json();
   })
   .then(function(data) {
-    createCard();
+    networkDataRecieved = true;
+    const posts = Object.entries(data).map(([key, value]) => value);
+    console.log('from web');
+    updateUI(posts);
   });
+
+if ('indexedDB' in window) {
+  readAllData('posts').then(data => {
+    if (!networkDataRecieved) {
+      console.log('from cache', data);
+      updateUI(data);
+    }
+  })
+}
