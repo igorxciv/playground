@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	"github.com/igorxciv/playground/grpc/calculator/sumpb"
 	"google.golang.org/grpc"
@@ -18,6 +19,23 @@ func (s *server) Sum(ctx context.Context, req *sumpb.SumRequest) (*sumpb.SumResp
 		Result: req.FirstNumber + req.SecondNumber,
 	}
 	return res, nil
+}
+
+func (s *server) Prime(req *sumpb.PrimeRequest, stream sumpb.SumService_PrimeServer) error {
+	k := int32(2)
+	v := req.GetNumber()
+	for v > 1 {
+		if v%k == 0 {
+			stream.Send(&sumpb.PrimeResponse{
+				Number: k,
+			})
+			time.Sleep(1 * time.Second)
+			v = v / 2
+		} else {
+			k = k + 1
+		}
+	}
+	return nil
 }
 
 func main() {

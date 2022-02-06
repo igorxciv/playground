@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 
 	"github.com/igorxciv/playground/grpc/calculator/sumpb"
@@ -22,6 +23,7 @@ func main() {
 	c := sumpb.NewSumServiceClient(conn)
 
 	doUnary(c)
+	doStream(c)
 }
 
 func doUnary(c sumpb.SumServiceClient) {
@@ -37,4 +39,27 @@ func doUnary(c sumpb.SumServiceClient) {
 	}
 
 	log.Printf("Response from sum: %v", res.Result)
+}
+
+func doStream(c sumpb.SumServiceClient) {
+	fmt.Println("starting stream for prime point")
+	req := &sumpb.PrimeRequest{
+		Number: 120,
+	}
+
+	stream, err := c.Prime(context.Background(), req)
+	if err != nil {
+		log.Fatalf("failed to get response:%v", err)
+	}
+
+	for {
+		msg, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("failed to get data from response: %v", err)
+		}
+		log.Printf("response number: %v", msg.Number)
+	}
 }

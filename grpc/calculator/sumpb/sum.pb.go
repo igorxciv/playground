@@ -126,6 +126,100 @@ func (x *SumResponse) GetResult() int32 {
 	return 0
 }
 
+type PrimeRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Number int32 `protobuf:"varint,1,opt,name=number,proto3" json:"number,omitempty"`
+}
+
+func (x *PrimeRequest) Reset() {
+	*x = PrimeRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_sumpb_sum_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PrimeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PrimeRequest) ProtoMessage() {}
+
+func (x *PrimeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_sumpb_sum_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PrimeRequest.ProtoReflect.Descriptor instead.
+func (*PrimeRequest) Descriptor() ([]byte, []int) {
+	return file_sumpb_sum_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *PrimeRequest) GetNumber() int32 {
+	if x != nil {
+		return x.Number
+	}
+	return 0
+}
+
+type PrimeResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Number int32 `protobuf:"varint,1,opt,name=number,proto3" json:"number,omitempty"`
+}
+
+func (x *PrimeResponse) Reset() {
+	*x = PrimeResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_sumpb_sum_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PrimeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PrimeResponse) ProtoMessage() {}
+
+func (x *PrimeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_sumpb_sum_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PrimeResponse.ProtoReflect.Descriptor instead.
+func (*PrimeResponse) Descriptor() ([]byte, []int) {
+	return file_sumpb_sum_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *PrimeResponse) GetNumber() int32 {
+	if x != nil {
+		return x.Number
+	}
+	return 0
+}
+
 var File_sumpb_sum_proto protoreflect.FileDescriptor
 
 var file_sumpb_sum_proto_rawDesc = []byte{
@@ -138,11 +232,20 @@ var file_sumpb_sum_proto_rawDesc = []byte{
 	0x63, 0x6f, 0x6e, 0x64, 0x4e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x22, 0x25, 0x0a, 0x0b, 0x53, 0x75,
 	0x6d, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x72, 0x65, 0x73,
 	0x75, 0x6c, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c,
-	0x74, 0x32, 0x38, 0x0a, 0x0a, 0x53, 0x75, 0x6d, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12,
-	0x2a, 0x0a, 0x03, 0x53, 0x75, 0x6d, 0x12, 0x0f, 0x2e, 0x73, 0x75, 0x6d, 0x2e, 0x53, 0x75, 0x6d,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x10, 0x2e, 0x73, 0x75, 0x6d, 0x2e, 0x53, 0x75,
-	0x6d, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x09, 0x5a, 0x07, 0x2e,
-	0x2f, 0x73, 0x75, 0x6d, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x74, 0x22, 0x26, 0x0a, 0x0c, 0x50, 0x72, 0x69, 0x6d, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x12, 0x16, 0x0a, 0x06, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x05, 0x52, 0x06, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x22, 0x27, 0x0a, 0x0d, 0x50, 0x72, 0x69,
+	0x6d, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x6e, 0x75,
+	0x6d, 0x62, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x6e, 0x75, 0x6d, 0x62,
+	0x65, 0x72, 0x32, 0x6c, 0x0a, 0x0a, 0x53, 0x75, 0x6d, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x12, 0x2a, 0x0a, 0x03, 0x53, 0x75, 0x6d, 0x12, 0x0f, 0x2e, 0x73, 0x75, 0x6d, 0x2e, 0x53, 0x75,
+	0x6d, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x10, 0x2e, 0x73, 0x75, 0x6d, 0x2e, 0x53,
+	0x75, 0x6d, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x32, 0x0a, 0x05,
+	0x50, 0x72, 0x69, 0x6d, 0x65, 0x12, 0x11, 0x2e, 0x73, 0x75, 0x6d, 0x2e, 0x50, 0x72, 0x69, 0x6d,
+	0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x12, 0x2e, 0x73, 0x75, 0x6d, 0x2e, 0x50,
+	0x72, 0x69, 0x6d, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x30, 0x01,
+	0x42, 0x09, 0x5a, 0x07, 0x2e, 0x2f, 0x73, 0x75, 0x6d, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -157,16 +260,20 @@ func file_sumpb_sum_proto_rawDescGZIP() []byte {
 	return file_sumpb_sum_proto_rawDescData
 }
 
-var file_sumpb_sum_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_sumpb_sum_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_sumpb_sum_proto_goTypes = []interface{}{
-	(*SumRequest)(nil),  // 0: sum.SumRequest
-	(*SumResponse)(nil), // 1: sum.SumResponse
+	(*SumRequest)(nil),    // 0: sum.SumRequest
+	(*SumResponse)(nil),   // 1: sum.SumResponse
+	(*PrimeRequest)(nil),  // 2: sum.PrimeRequest
+	(*PrimeResponse)(nil), // 3: sum.PrimeResponse
 }
 var file_sumpb_sum_proto_depIdxs = []int32{
 	0, // 0: sum.SumService.Sum:input_type -> sum.SumRequest
-	1, // 1: sum.SumService.Sum:output_type -> sum.SumResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	2, // 1: sum.SumService.Prime:input_type -> sum.PrimeRequest
+	1, // 2: sum.SumService.Sum:output_type -> sum.SumResponse
+	3, // 3: sum.SumService.Prime:output_type -> sum.PrimeResponse
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -202,6 +309,30 @@ func file_sumpb_sum_proto_init() {
 				return nil
 			}
 		}
+		file_sumpb_sum_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PrimeRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_sumpb_sum_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PrimeResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -209,7 +340,7 @@ func file_sumpb_sum_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_sumpb_sum_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -236,6 +367,7 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type SumServiceClient interface {
 	Sum(ctx context.Context, in *SumRequest, opts ...grpc.CallOption) (*SumResponse, error)
+	Prime(ctx context.Context, in *PrimeRequest, opts ...grpc.CallOption) (SumService_PrimeClient, error)
 }
 
 type sumServiceClient struct {
@@ -255,9 +387,42 @@ func (c *sumServiceClient) Sum(ctx context.Context, in *SumRequest, opts ...grpc
 	return out, nil
 }
 
+func (c *sumServiceClient) Prime(ctx context.Context, in *PrimeRequest, opts ...grpc.CallOption) (SumService_PrimeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_SumService_serviceDesc.Streams[0], "/sum.SumService/Prime", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &sumServicePrimeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type SumService_PrimeClient interface {
+	Recv() (*PrimeResponse, error)
+	grpc.ClientStream
+}
+
+type sumServicePrimeClient struct {
+	grpc.ClientStream
+}
+
+func (x *sumServicePrimeClient) Recv() (*PrimeResponse, error) {
+	m := new(PrimeResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // SumServiceServer is the server API for SumService service.
 type SumServiceServer interface {
 	Sum(context.Context, *SumRequest) (*SumResponse, error)
+	Prime(*PrimeRequest, SumService_PrimeServer) error
 }
 
 // UnimplementedSumServiceServer can be embedded to have forward compatible implementations.
@@ -266,6 +431,9 @@ type UnimplementedSumServiceServer struct {
 
 func (*UnimplementedSumServiceServer) Sum(context.Context, *SumRequest) (*SumResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Sum not implemented")
+}
+func (*UnimplementedSumServiceServer) Prime(*PrimeRequest, SumService_PrimeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Prime not implemented")
 }
 
 func RegisterSumServiceServer(s *grpc.Server, srv SumServiceServer) {
@@ -290,6 +458,27 @@ func _SumService_Sum_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SumService_Prime_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(PrimeRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(SumServiceServer).Prime(m, &sumServicePrimeServer{stream})
+}
+
+type SumService_PrimeServer interface {
+	Send(*PrimeResponse) error
+	grpc.ServerStream
+}
+
+type sumServicePrimeServer struct {
+	grpc.ServerStream
+}
+
+func (x *sumServicePrimeServer) Send(m *PrimeResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 var _SumService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "sum.SumService",
 	HandlerType: (*SumServiceServer)(nil),
@@ -299,6 +488,12 @@ var _SumService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _SumService_Sum_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Prime",
+			Handler:       _SumService_Prime_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "sumpb/sum.proto",
 }
