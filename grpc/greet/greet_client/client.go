@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"time"
 
 	"github.com/igorxciv/playground/grpc/greet/greetpb"
 	"google.golang.org/grpc"
@@ -23,9 +24,11 @@ func main() {
 
 	c := greetpb.NewGreetServiceClient(conn)
 
-	doUnary(c)
+	// doUnary(c)
 
-	doStream(c)
+	// doStream(c)
+
+	doClientStream(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
@@ -70,4 +73,58 @@ func doStream(c greetpb.GreetServiceClient) {
 		}
 		log.Printf("response from stream: %v", msg.GetResult())
 	}
+}
+
+func doClientStream(c greetpb.GreetServiceClient) {
+	fmt.Println("Streaming client started")
+
+	stream, err := c.LongGreet(context.Background())
+	if err != nil {
+		log.Fatalf("failed to process client streaming: %v", err)
+	}
+
+	reqs := []*greetpb.LongGreetRequest{
+		{
+			Greeting: &greetpb.Greeting{
+				FirstName: "Igor",
+				LastName:  "Cheliadinski",
+			},
+		},
+		{
+			Greeting: &greetpb.Greeting{
+				FirstName: "Victoria",
+				LastName:  "Cheliadinskaya",
+			},
+		},
+		{
+			Greeting: &greetpb.Greeting{
+				FirstName: "Frodo",
+				LastName:  "Baggins",
+			},
+		},
+		{
+			Greeting: &greetpb.Greeting{
+				FirstName: "Gendalf",
+				LastName:  "Grey",
+			},
+		},
+		{
+			Greeting: &greetpb.Greeting{
+				FirstName: "Bilbo",
+				LastName:  "Baggins",
+			},
+		},
+	}
+
+	for _, req := range reqs {
+		fmt.Printf("Sending req: %v\n", req)
+		stream.Send(req)
+		time.Sleep(1 * time.Second)
+	}
+
+	res, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Fatalf("failed to close and recive response: %v", err)
+	}
+	fmt.Printf("Long Greet response %v", res.Result)
 }

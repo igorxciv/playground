@@ -20,7 +20,16 @@ message PrimeResponse {
     int32 number = 1;
 }
 
+message ComputeAverageRequest {
+    int32 number = 1;
+}
+
+message ComputeAverageResponse {
+    float result = 1;
+}
+
 service SumService {
     rpc Sum(SumRequest) returns (SumResponse) {};
     rpc Prime(PrimeRequest) returns (stream PrimeResponse) {};
+    rpc ComputeAverage(stream ComputeAverageRequest) returns (ComputeAverageResponse) {} 
 }

@@ -39,11 +39,12 @@ func (s *server) GreetManyTimes(req *greetpb.GreetManyTimesRequest, stream greet
 }
 
 func (s *server) LongGreet(stream greetpb.GreetService_LongGreetServer) error {
+	result := ""
 	for {
 		req, err := stream.Recv()
 		if err == io.EOF {
 			return stream.SendAndClose(&greetpb.LongGreetResponse{
-				Result: "stream is finished",
+				Result: result,
 			})
 		}
 		if err != nil {
@@ -51,7 +52,7 @@ func (s *server) LongGreet(stream greetpb.GreetService_LongGreetServer) error {
 		}
 		fName := req.GetGreeting().GetFirstName()
 		lName := req.GetGreeting().GetLastName()
-		stream.SendMsg("Hello " + fName + " " + lName)
+		result += "Hello " + fName + " " + lName + "!\n"
 	}
 }
 
