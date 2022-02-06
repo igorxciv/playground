@@ -28,7 +28,9 @@ func main() {
 
 	// doStream(c)
 
-	doClientStream(c)
+	// doClientStream(c)
+
+	doBidi(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
@@ -127,4 +129,75 @@ func doClientStream(c greetpb.GreetServiceClient) {
 		log.Fatalf("failed to close and recive response: %v", err)
 	}
 	fmt.Printf("Long Greet response %v", res.Result)
+}
+
+func doBidi(c greetpb.GreetServiceClient) {
+	fmt.Println("Starting to do a BiDi Streaming RPC")
+
+	stream, err := c.GreetEveryone(context.Background())
+	if err != nil {
+		log.Fatalf("failed to greet everyone: %v", err)
+	}
+
+	waitc := make(chan struct{})
+	reqs := []*greetpb.GreetEveryoneRequest{
+		{
+			Greeting: &greetpb.Greeting{
+				FirstName: "Igor",
+				LastName:  "Cheliadinski",
+			},
+		},
+		{
+			Greeting: &greetpb.Greeting{
+				FirstName: "Victoria",
+				LastName:  "Cheliadinskaya",
+			},
+		},
+		{
+			Greeting: &greetpb.Greeting{
+				FirstName: "Frodo",
+				LastName:  "Baggins",
+			},
+		},
+		{
+			Greeting: &greetpb.Greeting{
+				FirstName: "Gendalf",
+				LastName:  "Grey",
+			},
+		},
+		{
+			Greeting: &greetpb.Greeting{
+				FirstName: "Bilbo",
+				LastName:  "Baggins",
+			},
+		},
+	}
+
+	go func() {
+		// send bunch of msgs
+		for _, req := range reqs {
+			fmt.Printf("Sending message: %v\n", req)
+			stream.Send(req)
+			time.Sleep(1 * time.Second)
+		}
+		stream.CloseSend()
+	}()
+
+	go func() {
+		// receive bunch of msgs
+		for {
+			res, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("failed to receive response: %v", err)
+			}
+			fmt.Printf("Result: %v\n", res.Result)
+		}
+		close(waitc)
+	}()
+
+	<-waitc
+
 }
