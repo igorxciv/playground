@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"time"
 
 	"github.com/igorxciv/playground/grpc/calculator/sumpb"
 	"google.golang.org/grpc"
@@ -22,8 +23,10 @@ func main() {
 
 	c := sumpb.NewSumServiceClient(conn)
 
-	doUnary(c)
-	doStream(c)
+	// doUnary(c)
+	// doStream(c)
+
+	doClientStream(c)
 }
 
 func doUnary(c sumpb.SumServiceClient) {
@@ -62,4 +65,40 @@ func doStream(c sumpb.SumServiceClient) {
 		}
 		log.Printf("response number: %v", msg.Number)
 	}
+}
+
+func doClientStream(c sumpb.SumServiceClient) {
+	log.Println("start client streaming")
+	stream, err := c.ComputeAverage(context.Background())
+	if err != nil {
+		log.Fatalf("failed to do request as client stream")
+	}
+
+	reqs := []*sumpb.ComputeAverageRequest{
+		{
+			Number: 1,
+		},
+		{
+			Number: 2,
+		},
+		{
+			Number: 3,
+		},
+		{
+			Number: 4,
+		},
+	}
+
+	for _, req := range reqs {
+		log.Printf("Sending number: %v", req.Number)
+		stream.Send(req)
+		time.Sleep(1 * time.Second)
+	}
+
+	res, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Fatalf("failed to close stream: %v", err)
+	}
+
+	log.Printf("AVERAGE: %v", res.Result)
 }

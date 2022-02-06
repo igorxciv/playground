@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"time"
@@ -36,6 +37,26 @@ func (s *server) Prime(req *sumpb.PrimeRequest, stream sumpb.SumService_PrimeSer
 		}
 	}
 	return nil
+}
+
+func (s *server) ComputeAverage(stream sumpb.SumService_ComputeAverageServer) error {
+	log.Println("started computing average...")
+
+	sum := 0
+	l := 0
+	for {
+		msg, err := stream.Recv()
+		if err == io.EOF {
+			return stream.SendAndClose(&sumpb.ComputeAverageResponse{
+				Result: float32(sum) / float32(l),
+			})
+		}
+		if err != nil {
+			log.Fatalf("failed to receive from client stream: %v", err)
+		}
+		sum += int(msg.GetNumber())
+		l = l + 1
+	}
 }
 
 func main() {
