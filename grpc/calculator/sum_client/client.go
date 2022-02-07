@@ -10,6 +10,7 @@ import (
 	"github.com/igorxciv/playground/grpc/calculator/sumpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/status"
 )
 
 func main() {
@@ -28,7 +29,9 @@ func main() {
 
 	// doClientStream(c)
 
-	doBidi(c)
+	// doBidi(c)
+
+	doErrorUnary(c)
 }
 
 func doUnary(c sumpb.SumServiceClient) {
@@ -162,4 +165,23 @@ func doBidi(c sumpb.SumServiceClient) {
 	}()
 
 	<-waitc
+}
+
+func doErrorUnary(c sumpb.SumServiceClient) {
+	fmt.Println("Starting square root unary RPC...")
+
+	res, err := c.SquareRoot(context.Background(), &sumpb.SquareRootRequest{
+		Number: -2,
+	})
+	if err != nil {
+		resErr, ok := status.FromError(err)
+		if ok {
+			// actual error from gRPC (user error)
+			log.Println(resErr.Message())
+		} else {
+			log.Fatalf("failed calling SquareRoot: %v", err)
+		}
+	}
+
+	log.Printf("Square: %v", res.GetNumber())
 }

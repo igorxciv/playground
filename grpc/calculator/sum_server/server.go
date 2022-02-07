@@ -5,11 +5,14 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math"
 	"net"
 	"time"
 
 	"github.com/igorxciv/playground/grpc/calculator/sumpb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type server struct{}
@@ -87,6 +90,18 @@ func (s *server) FindMaximum(stream sumpb.SumService_FindMaximumServer) error {
 			log.Fatalf("failed to send stream: %v", err)
 		}
 	}
+}
+
+func (s *server) SquareRoot(ctx context.Context, req *sumpb.SquareRootRequest) (*sumpb.SquareRootResponse, error) {
+	log.Println("Intercepted by SquareRoot RPC")
+	number := req.GetNumber()
+
+	if number < 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "Received negative number: %v", number)
+	}
+	return &sumpb.SquareRootResponse{
+		Number: math.Sqrt(float64(number)),
+	}, nil
 }
 
 func main() {
