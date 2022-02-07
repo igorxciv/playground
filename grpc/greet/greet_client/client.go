@@ -9,7 +9,9 @@ import (
 
 	"github.com/igorxciv/playground/grpc/greet/greetpb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/status"
 )
 
 func main() {
@@ -30,7 +32,9 @@ func main() {
 
 	// doClientStream(c)
 
-	doBidi(c)
+	// doBidi(c)
+
+	doWithDeadline(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
@@ -200,4 +204,34 @@ func doBidi(c greetpb.GreetServiceClient) {
 
 	<-waitc
 
+}
+
+func doWithDeadline(c greetpb.GreetServiceClient) {
+	log.Println("Intercepted with deadline")
+
+	req := &greetpb.GreetWithDeadlineRequest{
+		Greeting: &greetpb.Greeting{
+			FirstName: "Igor",
+			LastName:  "Cheliadinski",
+		},
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 6*time.Second)
+	defer cancel()
+
+	res, err := c.GreetWithDeadline(ctx, req)
+	if err != nil {
+		statusErr, ok := status.FromError(err)
+		if ok {
+			if statusErr.Code() == codes.DeadlineExceeded {
+				log.Println("Timeout!")
+			} else {
+				fmt.Printf("unexpected error: %v", statusErr.Message())
+			}
+		} else {
+			log.Fatalf("Failed to make request: %v\n", err)
+		}
+		return
+	}
+	log.Printf("Response: %v\n", res.Result)
 }

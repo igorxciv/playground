@@ -11,6 +11,8 @@ import (
 
 	"github.com/igorxciv/playground/grpc/greet/greetpb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type server struct{}
@@ -77,6 +79,23 @@ func (s *server) GreetEveryone(stream greetpb.GreetService_GreetEveryoneServer) 
 			log.Fatalf("error while sending data to client: %v", err)
 		}
 	}
+}
+
+func (s *server) GreetWithDeadline(ctx context.Context, req *greetpb.GreetWithDeadlineRequest) (*greetpb.GreetWithDeadlineResponse, error) {
+	log.Println("greet with deadline intercepted")
+
+	for i := 0; i < 3; i++ {
+		if ctx.Err() == context.Canceled {
+			return nil, status.Error(codes.Canceled, "the client canceled the request")
+		}
+		time.Sleep(1 * time.Second)
+	}
+	fName := req.GetGreeting().GetFirstName()
+	result := "Hello " + fName + "!"
+
+	return &greetpb.GreetWithDeadlineResponse{
+		Result: result,
+	}, nil
 }
 
 func main() {
