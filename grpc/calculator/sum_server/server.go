@@ -59,6 +59,36 @@ func (s *server) ComputeAverage(stream sumpb.SumService_ComputeAverageServer) er
 	}
 }
 
+func (s *server) FindMaximum(stream sumpb.SumService_FindMaximumServer) error {
+	log.Println("find maximum execution...")
+
+	nums := []int32{}
+	var max int32
+
+	for {
+		msg, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			log.Fatalf("failed to get stream: %v", err)
+		}
+
+		nums = append(nums, msg.GetNumber())
+		if msg.GetNumber() > max {
+			max = msg.GetNumber()
+		}
+
+		log.Printf("nums: %v", nums)
+
+		if err := stream.Send(&sumpb.FindMaximumResponse{
+			Result: max,
+		}); err != nil {
+			log.Fatalf("failed to send stream: %v", err)
+		}
+	}
+}
+
 func main() {
 	fmt.Println("Hello from sum server")
 

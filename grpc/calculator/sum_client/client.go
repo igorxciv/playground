@@ -26,7 +26,9 @@ func main() {
 	// doUnary(c)
 	// doStream(c)
 
-	doClientStream(c)
+	// doClientStream(c)
+
+	doBidi(c)
 }
 
 func doUnary(c sumpb.SumServiceClient) {
@@ -101,4 +103,63 @@ func doClientStream(c sumpb.SumServiceClient) {
 	}
 
 	log.Printf("AVERAGE: %v", res.Result)
+}
+
+func doBidi(c sumpb.SumServiceClient) {
+	fmt.Println("Client bidi started!")
+
+	stream, err := c.FindMaximum(context.Background())
+	if err != nil {
+		log.Fatalf("failed to get maximum: %v", err)
+	}
+
+	waitc := make(chan struct{})
+	reqs := []*sumpb.FindMaximumRequest{
+		{
+			Number: 1,
+		},
+		{
+			Number: 5,
+		},
+		{
+			Number: 3,
+		},
+		{
+			Number: 6,
+		},
+		{
+			Number: 2,
+		},
+		{
+			Number: 2,
+		},
+		{
+			Number: 20,
+		},
+	}
+
+	go func() {
+		for _, req := range reqs {
+			fmt.Printf("Sending to get max: %v\n", req)
+			stream.Send(req)
+			time.Sleep(1 * time.Second)
+		}
+		stream.CloseSend()
+	}()
+
+	go func() {
+		for {
+			res, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("failed to receive response : %v", err)
+			}
+			fmt.Printf("Maximum for now: %v\n", res.Result)
+		}
+		close(waitc)
+	}()
+
+	<-waitc
 }
