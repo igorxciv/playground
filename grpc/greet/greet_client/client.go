@@ -10,14 +10,16 @@ import (
 	"github.com/igorxciv/playground/grpc/greet/greetpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 )
 
 func main() {
 	fmt.Println("Hello from a client")
 
-	conn, err := grpc.Dial("0.0.0.0:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	certFile := "ssl/ca.crt"
+	creds, _ := credentials.NewClientTLSFromFile(certFile, "")
+	conn, err := grpc.Dial("0.0.0.0:50051", grpc.WithTransportCredentials(creds))
 	if err != nil {
 		log.Fatalf("failed to dial to grpc: %v", err)
 	}
